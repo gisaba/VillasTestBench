@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script per eseguire l'intera pipeline di simulazione DESF + DPSim
+# Script per eseguire l'intera pipeline di simulazione
 
 set -e  # Termina lo script se un comando fallisce
 
@@ -34,40 +34,21 @@ echo "===== AVVIO SIMULAZIONE COMPLETA DESF + DPSIM ====="
 echo "$(date)"
 echo
 
-# 1. Esegui la simulazione DPSim
-echo "===== AVVIO SIMULAZIONE DPSIM ====="
-cd dpsim_local
-# Esegui in background e reindirizza l'output
-sh run_simulation.sh > /tmp/dpsim_output.log 2>&1 &
-pid=$!
-show_spinner $pid "Esecuzione simulazione DPSim in corso..."
-echo "Simulazione DPSim completata"
-cd ..
-echo
-
-# 2. Esegui la simulazione DESF con Docker Compose
-echo "===== AVVIO SIMULAZIONE DESF ====="
+# 2. Esegui la simulazione con Docker Compose
+echo "===== AVVIO SIMULAZIONE ====="
 # Esegui in background e reindirizza l'output
 docker compose up --build > /tmp/desf_output.log 2>&1 &
 pid=$!
-show_spinner $pid "Esecuzione simulazione DESF in corso..."
+show_spinner $pid "Esecuzione simulazione in corso..."
 
 # Verifica che tutti i container siano terminati
 printf "Verifica che tutti i container siano terminati... "
-while docker ps --filter "name=2labs_dp" | grep -q "2labs_dp"; do
+while docker ps --filter "name=2nodes" | grep -q "2nodes"; do
     printf "."  # Mostra un punto per indicare che stiamo ancora aspettando
     sleep 1
 done
 printf "\033[32m[OK]\033[0m\n"
 echo
-
-# 3. Genera i diagrammi
-echo "===== GENERAZIONE DIAGRAMMI ====="
-# Esegui in background e reindirizza l'output
-python3 plot_result_plotly.py --desf-dir lab_a/logs --dpsim-dir dpsim_local/logs > /tmp/plot_output.log 2>&1 &
-python3 plot_result_plotly_RMSE.py --desf-dir lab_a/logs --dpsim-dir dpsim_local/logs > /tmp/plot_output.log 2>&1 &
-pid=$!
-show_spinner $pid "Generazione diagrammi in corso..."
 
 # Mostra i file utilizzati per la generazione dei diagrammi
 echo "File utilizzati:"

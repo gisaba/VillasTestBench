@@ -11,20 +11,10 @@ services:
  
 
   # Laboratory A services
-  signal_lab_a:
-    labels:
-      desf.workbench: "Signal Simulation Workbench"
-    extends:
-      file: ./lab_a/docker-compose.yaml
-      service: signal_lab_a
-    env_file:
-      - ./.env
-    
-
-    networks:
-      - simulation_shared_network
     
   villas_lab_a:
+    profiles:
+      - villas
     labels:
       desf.workbench: "DESF Simulation Workbench"
     extends:
@@ -32,23 +22,12 @@ services:
       service: villas_lab_a
     networks:
       - simulation_shared_network
-    depends_on:
-      - dpsim_lab_a
     
   # Laboratory B services
-  signal_lab_b:
-    labels:
-      desf.workbench: "Signal Simulation Workbench"
-    extends:
-      file: ./lab_b/docker-compose.yaml
-      service: signal_lab_b
-    env_file:
-      - ./.env
-    networks:
-      - simulation_shared_network
-    
 
   villas_lab_b:
+    profiles:
+      - villas
     labels:
       desf.workbench: "Signal Simulation Workbench"
     extends:
@@ -56,9 +35,7 @@ services:
       service: villas_lab_b
     networks:
       - simulation_shared_network
-    depends_on:
-      - dpsim_lab_b
-    
+
 
 
   # Supervisore per terminare tutti i container quando uno termina
@@ -68,8 +45,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - PROJECT_NAME=2labs_dp
-      - CONTAINERS_TO_MONITOR=dpsim_lab_a,dpsim_lab_b
+      - PROJECT_NAME=2nodes
+      - CONTAINERS_TO_MONITOR=villas_lab_a,villas_lab_b
       - CHECK_INTERVAL=1.0
       - GRACE_PERIOD=5.0
       - COMPLETION_MESSAGE=Simulation completed

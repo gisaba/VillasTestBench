@@ -26,8 +26,8 @@ logging.basicConfig(
 logger = logging.getLogger('supervisor')
 
 # Configurazione
-PROJECT_NAME = os.getenv('PROJECT_NAME', '2labs_dp')
-CONTAINERS_TO_MONITOR = os.getenv('CONTAINERS_TO_MONITOR', 'dpsim_lab_a,dpsim_lab_b').split(',')
+PROJECT_NAME = os.getenv('PROJECT_NAME', '2nodes')
+CONTAINERS_TO_MONITOR = os.getenv('CONTAINERS_TO_MONITOR', 'villas_lab_a,villas_lab_b').split(',')
 CHECK_INTERVAL = float(os.getenv('CHECK_INTERVAL', '1.0'))
 GRACE_PERIOD = float(os.getenv('GRACE_PERIOD', '10.0'))
 COMPLETION_MESSAGE = os.getenv('COMPLETION_MESSAGE', 'Simulation completed')

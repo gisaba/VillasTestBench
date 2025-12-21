@@ -40,6 +40,8 @@ services:
 
   # Supervisore per terminare tutti i container quando uno termina
   supervisor:
+    profiles:
+      - supervisor
     build:
       context: ./supervisor
     volumes:

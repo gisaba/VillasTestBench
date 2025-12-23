@@ -33,14 +33,14 @@ show_spinner() {
   printf "\033[32m[Completato]\033[0m\n"
 }
 
-echo "===== AVVIO SIMULAZIONE COMPLETA DESF + DPSIM ====="
+echo "===== AVVIO SIMULAZIONE COMPLETA DESF ====="
 echo "$(date)"
 echo
 
 # 2. Esegui la simulazione con Docker Compose
 echo "===== AVVIO SIMULAZIONE ====="
 # Esegui in background e reindirizza l'output
-docker compose --profile villas up --build > /tmp/desf_output.log 2>&1 &
+docker compose --profile villas up --build > /tmp/simulation_output.log 2>&1 &
 pid=$!
 show_spinner $pid "Esecuzione simulazione in corso CTRL+C per terminare..."
 

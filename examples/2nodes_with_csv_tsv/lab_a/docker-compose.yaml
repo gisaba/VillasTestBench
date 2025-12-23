@@ -1,0 +1,70 @@
+# This file represents a Laboratory entity in the DESF framework
+x-desf-entity: &desf-laboratory
+  name: "Laboratory A"
+  type: "Laboratory"
+  description: "Collection of 1 Compute Node, 1 Communication Node for distributed simulation"
+
+services:
+
+  villas_lab_a:
+    labels:
+      desf.entity.type: "CommunicationNode"
+      desf.entity.description: "Docker container running Villas Node for network communication"
+      desf.laboratory: "Laboratory A"
+    environment:
+      TASK: "VILLAS_LAB_A"
+      ITERATIONS: 100000
+    image: registry.git.rwth-aachen.de/acs/public/villas/node
+    volumes:
+      - ./config:/configs
+      - ./logs:/logs
+    tty: true
+    entrypoint: ["sh"]
+    command: ["-c", "villas-node /configs/path.conf"]
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 99
+      rttime: -1
+      memlock: 8428281856
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  signal_lab_a:
+    labels:
+      desf.entity.type: "CommunicationNode"
+      desf.entity.description: "Docker container running Villas Node for network communication"
+      desf.laboratory: "Laboratory A"
+    environment:
+      TASK: "VILLAS_LAB_A"
+      ITERATIONS: 100000
+    image: registry.git.rwth-aachen.de/acs/public/villas/node
+    volumes:
+      - ./config:/configs
+      - ./logs:/logs
+    tty: true
+    entrypoint: ["sh"]
+    command: ["-c", "villas-node /configs/path.conf"]
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 99
+      rttime: -1
+      memlock: 8428281856
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+# Networks are defined in the main docker-compose.yaml
+# This file is meant to be used as a service definition only

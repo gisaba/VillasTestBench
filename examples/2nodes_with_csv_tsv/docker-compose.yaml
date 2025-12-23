@@ -1,0 +1,46 @@
+# This file represents a Workbench entity in the DESF framework
+x-desf-entity: &desf-workbench
+  name: "Simulation Workbench"
+  type: "Workbench"
+  description: "Group of 2+ Laboratories that need to communicate for distributed simulation"
+  laboratories:
+    - "Laboratory A"
+    - "Laboratory B"
+
+services:
+ 
+
+  # Laboratory A services
+    
+  villas_lab_a:
+    profiles:
+      - villas
+    labels:
+      desf.workbench: "DESF Simulation Workbench"
+    extends:
+      file: ./lab_a/docker-compose.yaml
+      service: villas_lab_a
+    networks:
+      - simulation_shared_network
+    
+  # Laboratory B services
+
+  villas_lab_b:
+    profiles:
+      - villas
+    labels:
+      desf.workbench: "Signal Simulation Workbench"
+    extends:
+      file: ./lab_b/docker-compose.yaml
+      service: villas_lab_b
+    networks:
+      - simulation_shared_network
+
+
+# Define all networks
+networks:
+  simulation_shared_network:
+    driver: bridge
+    labels:
+      desf.entity.type: "WorkbenchNetwork"
+      desf.description: "Shared network for inter-laboratory communication"

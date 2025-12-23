@@ -18,6 +18,7 @@ rm lab_a/logs/log_*.tsv  > /dev/null 2>&1 || true
 rm lab_b/logs/log_*.log  > /dev/null 2>&1 || true
 rm lab_b/logs/log_*.csv  > /dev/null 2>&1 || true
 rm lab_b/logs/log_*.tsv  > /dev/null 2>&1 || true
+rm lab_b/logs/log_*.protobuf > /dev/null 2>&1 || true
 
 # Funzione per mostrare un indicatore di progresso
 show_spinner() {

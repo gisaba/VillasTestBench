@@ -11,6 +11,8 @@ if [ -z "$BASH_VERSION" ]; then
     exit 1
 fi
 
+# 1. Pulisci i log precedenti
+rm lab_a/logs/log_*.iot  > /dev/null 2>&1 || true
 rm lab_a/logs/log_*.csv  > /dev/null 2>&1 || true
 rm lab_a/logs/log_*.tsv  > /dev/null 2>&1 || true
 rm lab_b/logs/log_*.log  > /dev/null 2>&1 || true

@@ -37,24 +37,6 @@ services:
       - simulation_shared_network
 
 
-
-  # Supervisore per terminare tutti i container quando uno termina
-  supervisor:
-    profiles:
-      - supervisor
-    build:
-      context: ./supervisor
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - PROJECT_NAME=2nodes
-      - CONTAINERS_TO_MONITOR=villas_lab_a,villas_lab_b
-      - CHECK_INTERVAL=1.0
-      - GRACE_PERIOD=5.0
-      - COMPLETION_MESSAGE=Simulation completed
-    networks:
-      - simulation_shared_network
-
 # Define all networks
 networks:
   simulation_shared_network:

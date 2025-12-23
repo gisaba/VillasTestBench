@@ -11,6 +11,9 @@ if [ -z "$BASH_VERSION" ]; then
     exit 1
 fi
 
+rm lab_a/logs/log_*.log  > /dev/null 2>&1 || true
+rm lab_b/logs/log_*.log  > /dev/null 2>&1 || true
+
 # Funzione per mostrare un indicatore di progresso
 show_spinner() {
   local pid=$1
@@ -37,9 +40,9 @@ echo
 # 2. Esegui la simulazione con Docker Compose
 echo "===== AVVIO SIMULAZIONE ====="
 # Esegui in background e reindirizza l'output
-docker compose up --build > /tmp/desf_output.log 2>&1 &
+docker compose --profile villas up --build > /tmp/desf_output.log 2>&1 &
 pid=$!
-show_spinner $pid "Esecuzione simulazione in corso..."
+show_spinner $pid "Esecuzione simulazione in corso CTRL+C per terminare..."
 
 # Verifica che tutti i container siano terminati
 printf "Verifica che tutti i container siano terminati... "
@@ -49,10 +52,6 @@ while docker ps --filter "name=2nodes" | grep -q "2nodes"; do
 done
 printf "\033[32m[OK]\033[0m\n"
 echo
-
-# Mostra i file utilizzati per la generazione dei diagrammi
-echo "File utilizzati:"
-grep "File " /tmp/plot_output.log
 
 echo
 echo "===== SIMULAZIONE COMPLETA TERMINATA ====="

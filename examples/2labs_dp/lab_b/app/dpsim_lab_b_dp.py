@@ -7,6 +7,8 @@ import dpsimpy
 import sys
 import logging
 from io import StringIO
+from datetime import datetime, timezone
+import time
 
 # Configurazione logging
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
@@ -211,6 +213,12 @@ def udp_receiver(sim,cs,n1):
 
             sequence = current_source[0]['sequence']
             ts = current_source[0]['ts']
+
+            # Log con timestamp_ns per analisi delay
+            timestamp_ns = time.time_ns()
+            logger.info(f"Campione: {sequence} | ricevuto | timestamp_ns={timestamp_ns}")
+
+            '''
             # ts: [secondi UNIX, nanosecondi]
             if isinstance(ts, dict) and 'origin' in ts:
                 sec, nsec = ts['origin']
@@ -221,8 +229,6 @@ def udp_receiver(sim,cs,n1):
 
 
             if sec is not None and nsec is not None:
-                from datetime import datetime, timezone
-                import time
                 dt = datetime.fromtimestamp(sec, tz=timezone.utc)
                 dt_str = dt.strftime('%Y-%m-%d %H:%M:%S')
                 # Timestamp corrente in secondi e nanosecondi
@@ -235,8 +241,7 @@ def udp_receiver(sim,cs,n1):
                 logger.info(f"Sequence: {sequence} | Timestamp ricevuto (ts): {ts} | Data/ora UTC: {dt_str}.{nsec:09d} | Delta log-origine: {diff_ms:.3f} ms")
             else:
                 logger.info(f"Sequence: {sequence} | Timestamp ricevuto (ts): {ts}")
-
-            
+            '''
 
             #sequence = current_source[0]['sequence']
             logger.debug(f"Received from {HOST_DEST}: {current_source}")

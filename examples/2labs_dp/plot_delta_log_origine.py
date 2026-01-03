@@ -2,31 +2,65 @@ import re
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+import time
+from datetime import datetime
 
 
 # Seleziona automaticamente il file di log più recente
+
+# --- Nuova versione: delay tra lab_a e lab_b usando timestamp_ns ---
 import glob
 import os
-log_files = glob.glob('lab_b/app/logs/dpsim_log_lab_b_*.log')
-if not log_files:
-    print("Nessun file di log trovato.")
+
+log_files_a = glob.glob('lab_a/app/logs/dpsim_log_lab_a_*.log')
+log_files_b = glob.glob('lab_b/app/logs/dpsim_log_lab_b_*.log')
+if not log_files_a or not log_files_b:
+    print("Nessun file di log trovato in lab_a o lab_b.")
     exit(1)
-LOG_FILE = max(log_files, key=os.path.getmtime)
-print(f"Analizzo il file di log più recente: {LOG_FILE}")
+log_file_a = max(log_files_a, key=os.path.getmtime)
+log_file_b = max(log_files_b, key=os.path.getmtime)
+print(f"Analizzo: {log_file_a} e {log_file_b}")
 
-# Regex per estrarre il delta
-pattern = re.compile(r"Delta log-origine: ([\d\.]+) ms")
+# Regex per estrarre sequence e timestamp_ns
+pattern_a = re.compile(r"Campione:? ?(\d+)[ -]*\| trasmesso.*timestamp_ns=(\d+)")
+pattern_b = re.compile(r"Campione:? ?(\d+)[ -]*\| ricevuto.*timestamp_ns=(\d+)")
 
-deltas = []
-
-with open(LOG_FILE, 'r') as f:
+# Estrai {sequence: timestamp_ns} da lab_a
+seq2ns_a = {}
+with open(log_file_a, 'r') as f:
     for line in f:
-        match = pattern.search(line)
+        match = pattern_a.search(line)
         if match:
-            deltas.append(float(match.group(1)))
+            sequence = int(match.group(1))
+            ts_ns = int(match.group(2))
+            seq2ns_a[sequence] = ts_ns
+
+# Estrai {sequence: timestamp_ns} da lab_b
+seq2ns_b = {}
+with open(log_file_b, 'r') as f:
+    for line in f:
+        match = pattern_b.search(line)
+        if match:
+            sequence = int(match.group(1))
+            ts_ns = int(match.group(2))
+            seq2ns_b[sequence] = ts_ns
+
+# Diagnostica: mostra i primi/ultimi 10 sequence
+seqs_a = sorted(seq2ns_a.keys())
+seqs_b = sorted(seq2ns_b.keys())
+print(f"Sequence in lab_a: {seqs_a[:10]} ... {seqs_a[-10:] if len(seqs_a)>10 else ''}")
+print(f"Sequence in lab_b: {seqs_b[:10]} ... {seqs_b[-10:] if len(seqs_b)>10 else ''}")
+seqs_common = sorted(set(seq2ns_a.keys()) & set(seq2ns_b.keys()))
+print(f"Sequence in comune: {seqs_common[:10]} ... {seqs_common[-10:] if len(seqs_common)>10 else ''}")
+
+# Calcola il delay per ogni sequence in comune (in ms)
+deltas = []
+for seq in seqs_common:
+    delay_ms = (seq2ns_b[seq] - seq2ns_a[seq]) / 1_000_000
+    deltas.append(delay_ms)
 
 if not deltas:
-    print("Nessun delta trovato nel log.")
+    print("Nessun delay calcolato tra lab_a e lab_b.")
     exit(1)
 
 plt.figure(figsize=(10,6))
@@ -54,3 +88,7 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 plt.show()
+
+now = datetime.now()
+timestamp_ns = time.time_ns()
+logger.info(f"Campione: {sequence} - | trasmesso | timestamp_ns={timestamp_ns}")

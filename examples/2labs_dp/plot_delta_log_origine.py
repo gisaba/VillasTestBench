@@ -7,7 +7,7 @@ import seaborn as sns
 # Seleziona automaticamente il file di log più recente
 import glob
 import os
-log_files = glob.glob('logs/dpsim_log_lab_b_*.log')
+log_files = glob.glob('lab_b/app/logs/dpsim_log_lab_b_*.log')
 if not log_files:
     print("Nessun file di log trovato.")
     exit(1)

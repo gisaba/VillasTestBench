@@ -13,6 +13,8 @@ fi
 
 rm lab_a/logs/log_*.log  > /dev/null 2>&1 || true
 rm lab_b/logs/log_*.log  > /dev/null 2>&1 || true
+rm lab_a/app/logs/dpsim_log_*.log  > /dev/null 2>&1 || true
+rm lab_b/app/logs/dpsim_log_*.log  > /dev/null 2>&1 || true
 
 # Funzione per mostrare un indicatore di progresso
 show_spinner() {
@@ -69,6 +71,7 @@ echo "===== GENERAZIONE DIAGRAMMI ====="
 # Esegui in background e reindirizza l'output
 python3 plot_result_plotly.py --desf-dir lab_a/logs --dpsim-dir dpsim_local/logs > /tmp/plot_output.log 2>&1 &
 python3 plot_result_plotly_RMSE.py --desf-dir lab_a/logs --dpsim-dir dpsim_local/logs > /tmp/plot_output.log 2>&1 &
+python3 plot_delta_log_origine.py --desf-dir lab_b/logs --dpsim-dir dpsim_local/logs > /tmp/plot_output.log 2>&1 &
 pid=$!
 show_spinner $pid "Generazione diagrammi in corso..."
 

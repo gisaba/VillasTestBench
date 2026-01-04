@@ -216,7 +216,7 @@ def udp_receiver(sim,cs,n1):
 
             # Log con timestamp_ns per analisi delay
             timestamp_ns = time.time_ns()
-            logger.info(f"Campione: {sequence} | ricevuto | timestamp_ns={timestamp_ns}")
+            logger.info(f"Campione: {sequence} | ricevuto | timestamp_ns={timestamp_ns} | ts={ts}")
 
             '''
             # ts: [secondi UNIX, nanosecondi]

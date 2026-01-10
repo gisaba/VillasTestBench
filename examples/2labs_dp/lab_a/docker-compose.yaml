@@ -51,7 +51,8 @@ services:
     environment:
       TASK: "VILLAS_LAB_A"
       ITERATIONS: 100000
-    image: registry.git.rwth-aachen.de/acs/public/villas/node
+    #image: registry.git.rwth-aachen.de/acs/public/villas/node
+    image: villas:1.0
     volumes:
       - ./config:/configs
       - ./logs:/logs

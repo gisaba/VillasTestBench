@@ -43,7 +43,8 @@ RUN apt-get update && \
     libssl-dev \
     libusb-1.0-0-dev \
     libzmq3-dev \
-    uuid-dev 
+    uuid-dev \
+    python3.10-venv
 
 
 RUN git clone https://github.com/VILLASframework/node.git VILLASnode

@@ -63,15 +63,16 @@ RUN cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build ./build --target install
 RUN DEPS_INCLUDE='uldaq jansson' bash packaging/deps.sh
 
-RUN addgroup --group nodegroup --gid 2000
+# Create nodeuser user with sudo privileges
+RUN useradd -ms /bin/bash nodeuser && \
+    usermod -aG sudo nodeuser
+# New added for disable sudo password
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-RUN adduser --system --disabled-password --home /VILLASnode --gecos '' \
-    --uid 1000 \
-    --gid 2000 \
-    "nodeuser"
+RUN chown -R nodeuser /VILLASnode /tmp
 
-RUN chown -R nodeuser:nodegroup /VILLASnode /tmp
+USER nodeuser
 
-USER nodeuser:nodegroup
+ENTRYPOINT [ "sudo", "-i"]
 
-ENTRYPOINT [ "sh" ]
+CMD ["/bin/bash"]

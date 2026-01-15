@@ -11,11 +11,6 @@ if [ -z "$BASH_VERSION" ]; then
     exit 1
 fi
 
-rm lab_a/logs/log_*.log  > /dev/null 2>&1 || true
-rm lab_b/logs/log_*.log  > /dev/null 2>&1 || true
-rm lab_a/app/logs/dpsim_log_*.log  > /dev/null 2>&1 || true
-rm lab_b/app/logs/dpsim_log_*.log  > /dev/null 2>&1 || true
-
 # Funzione per mostrare un indicatore di progresso
 show_spinner() {
   local pid=$1
@@ -53,13 +48,13 @@ echo
 # 2. Esegui la simulazione DESF con Docker Compose
 echo "===== AVVIO SIMULAZIONE DESF ====="
 # Esegui in background e reindirizza l'output
-docker compose up --build > /tmp/desf_output.log 2>&1 &
+docker compose --profile lab_a up --build > /tmp/desf_output.log 2>&1 &
 pid=$!
 show_spinner $pid "Esecuzione simulazione DESF in corso..."
 
 # Verifica che tutti i container siano terminati
 printf "Verifica che tutti i container siano terminati... "
-while docker ps --filter "name=2labs_dp" | grep -q "2labs_dp"; do
+while docker ps --filter "name=2labs_dp_distributed" | grep -q "2labs_dp_distributed"; do
     printf "."  # Mostra un punto per indicare che stiamo ancora aspettando
     sleep 1
 done
@@ -70,8 +65,6 @@ echo
 echo "===== GENERAZIONE DIAGRAMMI ====="
 # Esegui in background e reindirizza l'output
 python3 plot_result_plotly.py --desf-dir lab_a/logs --dpsim-dir dpsim_local/logs > /tmp/plot_output.log 2>&1 &
-python3 plot_result_plotly_RMSE.py --desf-dir lab_a/logs --dpsim-dir dpsim_local/logs > /tmp/plot_output.log 2>&1 &
-python3 plot_delta_log_origine.py --desf-dir lab_b/logs --dpsim-dir dpsim_local/logs > /tmp/plot_output.log 2>&1 &
 pid=$!
 show_spinner $pid "Generazione diagrammi in corso..."
 

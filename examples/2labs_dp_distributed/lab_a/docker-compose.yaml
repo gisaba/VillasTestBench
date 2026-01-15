@@ -8,6 +8,7 @@ services:
 
   dpsim_lab_a:
     image: antoniopicone/dpsim-arm64-dev:1.0.3
+    profiles: [lab_a]
     labels:
       desf.entity.type: "ComputeNode"
       desf.entity.description: "Docker container running DPSim electric simulation"
@@ -52,10 +53,10 @@ services:
       TASK: "VILLAS_LAB_A"
       ITERATIONS: 100000
     image: registry.git.rwth-aachen.de/acs/public/villas/node
-    #image: villas:1.0
+    profiles: [lab_a]
     ports:
-      - "12000:12000/udp" # Port for incoming data from DPSim
-      - "12001:12001/udp"
+      - "12000:12000/udp"  # Port for DPSim communication
+      - "12003:12003/udp"
     volumes:
       - ./config:/configs
       - ./logs:/logs

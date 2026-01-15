@@ -51,6 +51,9 @@ services:
       ITERATIONS: 100000
     image: registry.git.rwth-aachen.de/acs/public/villas/node
     #image: villas:1.0
+    ports:
+      - "12000:12000/udp" # Port for incoming data from DPSim
+      - "12003:12003/udp"
     volumes:
       - ./config:/configs
       - ./logs:/logs

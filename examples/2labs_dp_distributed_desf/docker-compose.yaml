@@ -65,10 +65,11 @@ services:
   supervisor:
     build:
       context: ./supervisor
+    profiles: [lab_a]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - PROJECT_NAME=2labs_dp
+      - PROJECT_NAME=2labs_dp_distributed
       - CONTAINERS_TO_MONITOR=dpsim_lab_a,dpsim_lab_b
       - CHECK_INTERVAL=1.0
       - GRACE_PERIOD=5.0

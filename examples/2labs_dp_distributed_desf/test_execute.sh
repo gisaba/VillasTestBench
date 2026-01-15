@@ -13,7 +13,7 @@ rm dpsim_local/logs/simulation_output.csv
 rm lab_a/logs/log_*.log    
 rm lab_b/logs/log_*.log 
 
-sh run_complete_simulation.sh
+sh run_complete_simulation_A.sh
 
 mkdir -p "./TEST/$1" || exit 1
 

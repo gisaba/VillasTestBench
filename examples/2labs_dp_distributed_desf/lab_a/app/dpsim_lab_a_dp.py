@@ -140,10 +140,6 @@ def next_simulation(sim,l1,vload,voltage_phasor,sequence,time_step):
                     "imag": imag_part
                 }]
             }]
-    
-    # Aggiunta timestamp_ns come intero (nanosecondi dal 1970)
-    timestamp_ns = time_module.time_ns()
-    logger.info(f"Campione:{sequence} | trasmesso | timestamp_ns={timestamp_ns}")
 
     # Invio risultato
     sock_tx = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

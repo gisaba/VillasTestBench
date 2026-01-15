@@ -7,7 +7,6 @@ x-desf-entity: &desf-laboratory
 services:
   dpsim_lab_b:
     image: antoniopicone/dpsim-arm64-dev:1.0.3
-    profiles: [lab_b]
     labels:
       desf.entity.type: "ComputeNode"
       desf.entity.description: "Docker container running DPSim electric simulation"
@@ -51,10 +50,7 @@ services:
       TASK: "VILLAS_LAB_B"
       ITERATIONS: 100000
     image: registry.git.rwth-aachen.de/acs/public/villas/node
-    profiles: [lab_b]
-    ports:
-      - "12000:12000/udp"  # Port for DPSim communication
-      - "12003:12003/udp"
+    #image: villas:1.0
     volumes:
       - ./config:/configs
       - ./logs:/logs

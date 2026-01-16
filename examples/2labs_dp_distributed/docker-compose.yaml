@@ -1,0 +1,86 @@
+# This file represents a Workbench entity in the DESF framework
+x-desf-entity: &desf-workbench
+  name: "DESF Simulation Workbench"
+  type: "Workbench"
+  description: "Group of 2+ Laboratories that need to communicate for distributed simulation"
+  laboratories:
+    - "Laboratory A"
+    - "Laboratory B"
+
+services:
+ 
+
+  # Laboratory A services
+  dpsim_lab_a:
+    labels:
+      desf.workbench: "DESF Simulation Workbench"
+    extends:
+      file: ./lab_a/docker-compose.yaml
+      service: dpsim_lab_a
+    env_file:
+      - ./.env
+    
+
+    networks:
+      - desf_shared_network
+    
+  villas_lab_a:
+    labels:
+      desf.workbench: "DESF Simulation Workbench"
+    extends:
+      file: ./lab_a/docker-compose.yaml
+      service: villas_lab_a
+    networks:
+      - desf_shared_network
+    depends_on:
+      - dpsim_lab_a
+    
+  # Laboratory B services
+  dpsim_lab_b:
+    labels:
+      desf.workbench: "DESF Simulation Workbench"
+    extends:
+      file: ./lab_b/docker-compose.yaml
+      service: dpsim_lab_b
+    env_file:
+      - ./.env
+    networks:
+      - desf_shared_network
+    
+
+  villas_lab_b:
+    labels:
+      desf.workbench: "DESF Simulation Workbench"
+    extends:
+      file: ./lab_b/docker-compose.yaml
+      service: villas_lab_b
+    networks:
+      - desf_shared_network
+    depends_on:
+      - dpsim_lab_b
+    
+
+
+  # Supervisore per terminare tutti i container quando uno termina
+  supervisor:
+    build:
+      context: ./supervisor
+    profiles: [lab_a]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - PROJECT_NAME=2labs_dp_distributed
+      - CONTAINERS_TO_MONITOR=dpsim_lab_a,dpsim_lab_b
+      - CHECK_INTERVAL=1.0
+      - GRACE_PERIOD=5.0
+      - COMPLETION_MESSAGE=Simulation completed
+    networks:
+      - desf_shared_network
+
+# Define all networks
+networks:
+  desf_shared_network:
+    driver: bridge
+    labels:
+      desf.entity.type: "WorkbenchNetwork"
+      desf.description: "Shared network for inter-laboratory communication"

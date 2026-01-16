@@ -7,6 +7,8 @@ import dpsimpy
 import sys
 import logging
 from io import StringIO
+from datetime import datetime, timezone
+import time
 
 # Configurazione logging
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
@@ -208,6 +210,14 @@ def udp_receiver(sim,cs,n1):
             current_source = json.loads(data.decode())
             i_real = current_source[0]['data'][0]['real']
             i_imag = current_source[0]['data'][0]['imag']
+
+            sequence = current_source[0]['sequence']
+            ts = current_source[0]['ts']
+
+            # Log con timestamp_ns per analisi delay
+            timestamp_ns = time.time_ns()
+            logger.info(f"Campione: {sequence} | ricevuto | timestamp_ns={timestamp_ns} | ts={ts}")
+
             #sequence = current_source[0]['sequence']
             logger.debug(f"Received from {HOST_DEST}: {current_source}")
             

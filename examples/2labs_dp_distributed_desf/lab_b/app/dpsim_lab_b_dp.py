@@ -7,6 +7,8 @@ import dpsimpy
 import sys
 import logging
 from io import StringIO
+from datetime import datetime, timezone
+import time
 
 # Configurazione logging
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
@@ -208,6 +210,39 @@ def udp_receiver(sim,cs,n1):
             current_source = json.loads(data.decode())
             i_real = current_source[0]['data'][0]['real']
             i_imag = current_source[0]['data'][0]['imag']
+
+            sequence = current_source[0]['sequence']
+            ts = current_source[0]['ts']
+
+            # Log con timestamp_ns per analisi delay
+            timestamp_ns = time.time_ns()
+            logger.info(f"Campione: {sequence} | ricevuto | timestamp_ns={timestamp_ns} | ts={ts}")
+
+            '''
+            # ts: [secondi UNIX, nanosecondi]
+            if isinstance(ts, dict) and 'origin' in ts:
+                sec, nsec = ts['origin']
+            elif isinstance(ts, (list, tuple)) and len(ts) == 2:
+                sec, nsec = ts
+            else:
+                sec, nsec = None, None
+
+
+            if sec is not None and nsec is not None:
+                dt = datetime.fromtimestamp(sec, tz=timezone.utc)
+                dt_str = dt.strftime('%Y-%m-%d %H:%M:%S')
+                # Timestamp corrente in secondi e nanosecondi
+                now_sec = int(time.time())
+                now_nsec = int((time.time() - now_sec) * 1e9)
+                # Calcola la differenza in millisecondi
+                origin_ms = sec * 1000 + nsec / 1e6
+                now_ms = now_sec * 1000 + now_nsec / 1e6
+                diff_ms = now_ms - origin_ms
+                logger.info(f"Sequence: {sequence} | Timestamp ricevuto (ts): {ts} | Data/ora UTC: {dt_str}.{nsec:09d} | Delta log-origine: {diff_ms:.3f} ms")
+            else:
+                logger.info(f"Sequence: {sequence} | Timestamp ricevuto (ts): {ts}")
+            '''
+
             #sequence = current_source[0]['sequence']
             logger.debug(f"Received from {HOST_DEST}: {current_source}")
             

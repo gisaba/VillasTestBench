@@ -207,6 +207,9 @@ def udp_receiver(sim,cs,n1):
             
             # Prova a ricevere dati
             data, _ = sock.recvfrom(1024)
+            
+            logger.info(f"Received from {HOST_DEST}: {data}")
+
             current_source = json.loads(data.decode())
             i_real = current_source[0]['data'][0]['real']
             i_imag = current_source[0]['data'][0]['imag']

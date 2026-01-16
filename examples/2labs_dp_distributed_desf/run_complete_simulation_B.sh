@@ -11,6 +11,11 @@ if [ -z "$BASH_VERSION" ]; then
     exit 1
 fi
 
+rm lab_a/logs/log_*.log  > /dev/null 2>&1 || true
+rm lab_b/logs/log_*.log  > /dev/null 2>&1 || true
+rm lab_a/app/logs/dpsim_log_*.log  > /dev/null 2>&1 || true
+rm lab_b/app/logs/dpsim_log_*.log  > /dev/null 2>&1 || true
+
 # Funzione per mostrare un indicatore di progresso
 show_spinner() {
   local pid=$1

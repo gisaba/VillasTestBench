@@ -1,4 +1,4 @@
-# This file represents a Laboratory entity in the DESF framework
+# This file represents a Laboratory entity in the DESF framework 
 x-desf-entity: &desf-laboratory
   name: "Laboratory B"
   type: "Laboratory"

@@ -11,12 +11,9 @@ services:
       desf.entity.type: "CommunicationNode"
       desf.entity.description: "Docker container running Villas Node for network communication"
       desf.laboratory: "Laboratory A"
-    environment:
-      TASK: "VILLAS_LAB_A"
-      ITERATIONS: 100000
     image: registry.git.rwth-aachen.de/acs/public/villas/node
     volumes:
-      - ./config:/configs
+      - ./config:/config
       - ./logs:/logs
     tty: true
     entrypoint: ["sh"]

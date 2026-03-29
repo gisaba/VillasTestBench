@@ -1,18 +1,11 @@
 # This file represents a Workbench entity in the DESF framework
-x-desf-entity: &desf-workbench
-  name: "Simulation Workbench"
-  type: "Workbench"
-  description: "Group of 2+ Laboratories that need to communicate for distributed simulation"
-  laboratories:
-    - "Laboratory A"
-
 services:
   # Laboratory
   villas_hook_dp:
     profiles:
       - dp
     labels:
-      desf.workbench: "DESF Simulation Workbench"
+      desf.workbench: "Test DP hook"
     extends:
       file: ./dp/docker-compose.yaml
       service: villas_hook_dp

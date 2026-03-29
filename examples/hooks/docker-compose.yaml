@@ -11,6 +11,17 @@ services:
       service: villas_hook_dp
     networks:
       - simulation_shared_network
+  villas_hook_limit_rate:
+    profiles:
+      - limit_rate
+    labels:
+      desf.workbench: "Test Limit Rate hook"
+    extends:
+      file: ./limit_rate/docker-compose.yaml
+      service: villas_hook_limit_rate
+    networks:
+      - simulation_shared_network
+  
     
 # Define all networks
 networks:

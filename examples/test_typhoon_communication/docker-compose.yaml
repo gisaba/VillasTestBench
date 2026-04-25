@@ -1,0 +1,20 @@
+# This file represents a Workbench entity in the DESF framework
+services:
+  # Laboratory
+  villas_typhoon_test:
+    labels:
+      desf.workbench: "Test villas_typhoon_test"
+    extends:
+      file: ./test/docker-compose.yaml
+      service: villas_typhoon_test
+    networks:
+      - simulation_shared_network
+  
+    
+# Define all networks
+networks:
+  simulation_shared_network:
+    driver: bridge
+    labels:
+      desf.entity.type: "WorkbenchNetwork"
+      desf.description: "Shared network for inter-laboratory communication"
